@@ -1,4 +1,4 @@
-import { siteConfig, socialLinks } from '../../data/site';
+import { socialLinks } from '../../data/site';
 import { SocialIcon } from '../ui/SocialIcon';
 
 export function Footer() {
