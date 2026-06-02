@@ -236,7 +236,7 @@ function TechRadialIntro({ stageSize = 440, itemSize = 44, avatarSize = 92, clas
 
   useEffect(() => {
     const clearTouch = () => setActiveItem(null);
-    window.addEventListener('touchstart', clearTouch);
+    window.addEventListener('touchstart', clearTouch, { passive: true });
     return () => window.removeEventListener('touchstart', clearTouch);
   }, []);
 

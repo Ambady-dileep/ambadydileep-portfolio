@@ -17,6 +17,10 @@ export function useMouseParallax(strength = 14) {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) return;
 
+    const isMobile = window.matchMedia('(pointer: coarse)').matches || 
+                     /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isMobile) return;
+
     const onMove = (e) => {
       const x = (e.clientX / window.innerWidth - 0.5) * strength;
       const y = (e.clientY / window.innerHeight - 0.5) * strength;

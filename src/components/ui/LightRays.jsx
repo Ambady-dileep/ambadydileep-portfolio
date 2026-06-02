@@ -202,20 +202,32 @@ void main(){vec4 color;mainImage(color,gl_FragCoord.xy);gl_FragColor=color;}`;
 
     const updateRect = () => {
       if (containerRef.current) {
-        rectRef.current = containerRef.current.getBoundingClientRect();
+        const rect = containerRef.current.getBoundingClientRect();
+        rectRef.current = {
+          left: rect.left,
+          top: rect.top,
+          width: rect.width,
+          height: rect.height,
+          pageX: rect.left + window.scrollX,
+          pageY: rect.top + window.scrollY
+        };
       }
     };
 
     updateRect();
     window.addEventListener('resize', updateRect, { passive: true });
-    window.addEventListener('scroll', updateRect, { passive: true });
 
     const handleMouseMove = e => {
-      const rect = rectRef.current || (containerRef.current && containerRef.current.getBoundingClientRect());
+      if (!rectRef.current) updateRect();
+      const rect = rectRef.current;
       if (!rect || !rendererRef.current) return;
+      
+      const viewportLeft = rect.pageX - window.scrollX;
+      const viewportTop = rect.pageY - window.scrollY;
+      
       mouseRef.current = { 
-        x: (e.clientX - rect.left) / rect.width, 
-        y: (e.clientY - rect.top) / rect.height 
+        x: (e.clientX - viewportLeft) / rect.width, 
+        y: (e.clientY - viewportTop) / rect.height 
       };
     };
 
@@ -223,10 +235,9 @@ void main(){vec4 color;mainImage(color,gl_FragCoord.xy);gl_FragColor=color;}`;
 
     return () => {
       window.removeEventListener('resize', updateRect);
-      window.removeEventListener('scroll', updateRect);
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [followMouse]);
+  }, [followMouse, shouldInit]);
 
   return <div ref={containerRef} className={`light-rays-container ${className}`.trim()} />;
 };

@@ -6,6 +6,7 @@ export function useMagnetic(strength = 0.35) {
 
   const onMouseMove = useCallback(
     (e) => {
+      if (window.matchMedia('(hover: none)').matches) return;
       const el = ref.current;
       if (!el) return;
       if (!rectRef.current) {
@@ -20,6 +21,7 @@ export function useMagnetic(strength = 0.35) {
   );
 
   const onMouseLeave = useCallback(() => {
+    if (window.matchMedia('(hover: none)').matches) return;
     rectRef.current = null;
     const el = ref.current;
     if (!el) return;

@@ -23,6 +23,7 @@ export function GravityStarsBackground({
   const animRef = React.useRef(null);
   const starsRef = React.useRef([]);
   const mouseRef = React.useRef({ x: 0, y: 0 });
+  const rectRef = React.useRef({ left: 0, top: 0, width: 0, height: 0, pageX: 0, pageY: 0 });
   const [dpr, setDpr] = React.useState(1);
   const [canvasSize, setCanvasSize] = React.useState({ width: 800, height: 600 });
   const [isVisible, setIsVisible] = React.useState(false);
@@ -67,6 +68,14 @@ export function GravityStarsBackground({
     const container = containerRef.current;
     if (!canvas || !container) return;
     const rect = container.getBoundingClientRect();
+    rectRef.current = {
+      left: rect.left,
+      top: rect.top,
+      width: rect.width,
+      height: rect.height,
+      pageX: rect.left + window.scrollX,
+      pageY: rect.top + window.scrollY
+    };
     const nextDpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
     setDpr(nextDpr);
     canvas.width = Math.max(1, Math.floor(rect.width * nextDpr));
@@ -81,7 +90,20 @@ export function GravityStarsBackground({
   const handlePointerMove = React.useCallback((e) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
+    
+    if (rectRef.current.width === 0) {
+      const rect = canvas.getBoundingClientRect();
+      rectRef.current = {
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height,
+        pageX: rect.left + window.scrollX,
+        pageY: rect.top + window.scrollY
+      };
+    }
+    
+    const rect = rectRef.current;
     let clientX = 0;
     let clientY = 0;
     if ('touches' in e) {
@@ -93,8 +115,24 @@ export function GravityStarsBackground({
       clientX = e.clientX;
       clientY = e.clientY;
     }
-    mouseRef.current = { x: clientX - rect.left, y: clientY - rect.top };
+    
+    const viewportLeft = rect.pageX - window.scrollX;
+    const viewportTop = rect.pageY - window.scrollY;
+    
+    mouseRef.current = { x: clientX - viewportLeft, y: clientY - viewportTop };
   }, []);
+
+  React.useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const handleMove = (e) => handlePointerMove(e);
+    container.addEventListener('mousemove', handleMove, { passive: true });
+    container.addEventListener('touchmove', handleMove, { passive: true });
+    return () => {
+      container.removeEventListener('mousemove', handleMove);
+      container.removeEventListener('touchmove', handleMove);
+    };
+  }, [handlePointerMove]);
 
   const updateStars = React.useCallback(() => {
     const w = canvasSize.width;
@@ -235,8 +273,6 @@ export function GravityStarsBackground({
     <div
       ref={containerRef}
       className={cn('absolute inset-0 overflow-hidden text-[var(--text-subtle)]', className)}
-      onMouseMove={handlePointerMove}
-      onTouchMove={handlePointerMove}
       aria-hidden
       {...props}
     >
