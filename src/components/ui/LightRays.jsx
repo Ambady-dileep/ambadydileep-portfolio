@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { Renderer, Program, Triangle, Mesh } from 'ogl';
+import { useDeferredInit } from '../../hooks/useDeferredInit';
 import './LightRays.css';
 
 const DEFAULT_COLOR = '#ffffff';
@@ -56,6 +57,8 @@ const LightRays = ({
   const cleanupFunctionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
   const observerRef = useRef(null);
+  const rectRef = useRef(null);
+  const shouldInit = useDeferredInit(700);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -68,7 +71,7 @@ const LightRays = ({
   }, []);
 
   useEffect(() => {
-    if (!isVisible || !containerRef.current) return;
+    if (!shouldInit || !isVisible || !containerRef.current) return;
     if (cleanupFunctionRef.current) { cleanupFunctionRef.current(); cleanupFunctionRef.current = null; }
 
     const initializeWebGL = async () => {
@@ -195,12 +198,34 @@ void main(){vec4 color;mainImage(color,gl_FragCoord.xy);gl_FragColor=color;}`;
   }, [raysColor, raysSpeed, lightSpread, raysOrigin, rayLength, pulsating, fadeDistance, saturation, mouseInfluence, noiseAmount, distortion]);
 
   useEffect(() => {
-    const handleMouseMove = e => {
-      if (!containerRef.current || !rendererRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      mouseRef.current = { x: (e.clientX - rect.left) / rect.width, y: (e.clientY - rect.top) / rect.height };
+    if (!shouldInit || !followMouse) return;
+
+    const updateRect = () => {
+      if (containerRef.current) {
+        rectRef.current = containerRef.current.getBoundingClientRect();
+      }
     };
-    if (followMouse) { window.addEventListener('mousemove', handleMouseMove); return () => window.removeEventListener('mousemove', handleMouseMove); }
+
+    updateRect();
+    window.addEventListener('resize', updateRect, { passive: true });
+    window.addEventListener('scroll', updateRect, { passive: true });
+
+    const handleMouseMove = e => {
+      const rect = rectRef.current || (containerRef.current && containerRef.current.getBoundingClientRect());
+      if (!rect || !rendererRef.current) return;
+      mouseRef.current = { 
+        x: (e.clientX - rect.left) / rect.width, 
+        y: (e.clientY - rect.top) / rect.height 
+      };
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+
+    return () => {
+      window.removeEventListener('resize', updateRect);
+      window.removeEventListener('scroll', updateRect);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
   }, [followMouse]);
 
   return <div ref={containerRef} className={`light-rays-container ${className}`.trim()} />;

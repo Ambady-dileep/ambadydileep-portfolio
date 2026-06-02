@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Home } from './pages/Home';
@@ -10,6 +11,10 @@ import { PremiumBackground } from './components/layout/PremiumBackground';
 function App() {
   const { isDark, toggleTheme } = useTheme();
   useLenis();
+
+  useEffect(() => {
+    document.dispatchEvent(new CustomEvent('app-ready'));
+  }, []);
 
   return (
     <HelmetProvider>

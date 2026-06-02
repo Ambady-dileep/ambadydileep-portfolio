@@ -11,7 +11,7 @@ export const siteConfig = {
   location: "Kerala, India",
   domain: "https://ambadydileep.live",
   resumePath: "/AmbadyDileepResume.pdf",
-  heroImagePath: "/portfolio.png",
+  heroImagePath: "/portfolio.webp",
   portraitPath: "/portrait.jpg",
 };
 
@@ -176,7 +176,7 @@ export const projects = [
     ],
     live: "https://frontend-mdsa.onrender.com/",
     accent: "#2563EB",
-    image: "/projects/user-management.png",
+    image: "/projects/user-management.webp",
   },
   {
     id: "sslc-calculator",
@@ -186,7 +186,7 @@ export const projects = [
     tech: ["React", "Vite", "Tailwind CSS", "Framer Motion", "Vercel"],
     live: "https://sslc-percentage-calculator.vercel.app/",
     accent: "#10B981",
-    image: "/projects/sslc-percentage-calculator.png",
+    image: "/projects/sslc-percentage-calculator.webp",
   },
   {
     id: "olx-clone",
@@ -206,6 +206,6 @@ export const projects = [
     tech: ["React", "Django", "Tailwind v4", "Netlify", "Git"],
     live: "https://thaibhavan-alappuzha.netlify.app/",
     accent: "#EC4899", 
-    image: "/projects/thaibhavan.png",
+    image: "/projects/thaibhavan.webp",
   },
 ];

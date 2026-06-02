@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GravityStarsBackground } from '../ui/GravityStarsBackground';
 import { fadeUp, viewportOnce } from '../../utils/motion';
@@ -132,10 +132,11 @@ function CenterAvatar({ size = 92 }) {
 
 // ─── Single icon node ─────────────────────────────────────────────────────────
 
-function IconNode({ item, x, y, size, isActive, onEnter, onLeave }) {
+function IconNode({ item, size, isActive, onEnter, onLeave, domRef }) {
   const hex = getBrandHex(item.slug);
   return (
     <button
+      ref={domRef}
       type="button"
       aria-label={item.name}
       onMouseEnter={() => onEnter(item)}
@@ -148,8 +149,6 @@ function IconNode({ item, x, y, size, isActive, onEnter, onLeave }) {
       style={{
         width:      size,
         height:     size,
-        left:       x,
-        top:        y,
         marginLeft: -size / 2,
         marginTop:  -size / 2,
         border: isActive
@@ -179,15 +178,12 @@ function IconNode({ item, x, y, size, isActive, onEnter, onLeave }) {
 
 function TechRadialIntro({ stageSize = 440, itemSize = 44, avatarSize = 92, className = '' }) {
   const [activeItem, setActiveItem] = useState(null);
-  const [positions,  setPositions]  = useState([]);
   const anglesRef  = useRef([]);
   const rafRef     = useRef(null);
   const lastTsRef  = useRef(null);
-  const nodesRef   = useRef([]);
+  const nodeDomRefs = useRef({});
 
-  useEffect(() => {
-    const cx = stageSize / 2;
-    const cy = stageSize / 2;
+  const nodes = useMemo(() => {
     const flat = [];
     RINGS.forEach(ring => {
       const r = ring.radiusFraction * stageSize;
@@ -203,18 +199,14 @@ function TechRadialIntro({ stageSize = 440, itemSize = 44, avatarSize = 92, clas
         });
       });
     });
-    nodesRef.current  = flat;
     anglesRef.current = flat.map(n => n.angle);
-    setPositions(flat.map(n => ({
-      id: n.id,
-      x:  cx + n.radius * Math.cos(n.angle),
-      y:  cy + n.radius * Math.sin(n.angle),
-    })));
+    return flat;
   }, [stageSize]);
 
   useEffect(() => {
     const cx = stageSize / 2;
     const cy = stageSize / 2;
+    lastTsRef.current = null;
 
     function tick(ts) {
       const dt = lastTsRef.current
@@ -222,19 +214,25 @@ function TechRadialIntro({ stageSize = 440, itemSize = 44, avatarSize = 92, clas
         : 16;
       lastTsRef.current = ts;
 
-      const next = nodesRef.current.map((node, i) => {
+      nodes.forEach((node, i) => {
         anglesRef.current[i] += node.speed * node.dir * dt;
         const a = anglesRef.current[i];
-        return { id: node.id, x: cx + node.radius * Math.cos(a), y: cy + node.radius * Math.sin(a) };
+        const x = cx + node.radius * Math.cos(a);
+        const y = cy + node.radius * Math.sin(a);
+        
+        const domEl = nodeDomRefs.current[node.id];
+        if (domEl) {
+          domEl.style.left = `${x}px`;
+          domEl.style.top = `${y}px`;
+        }
       });
 
-      setPositions(next);
       rafRef.current = requestAnimationFrame(tick);
     }
 
     rafRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [stageSize]);
+  }, [stageSize, nodes]);
 
   useEffect(() => {
     const clearTouch = () => setActiveItem(null);
@@ -244,9 +242,6 @@ function TechRadialIntro({ stageSize = 440, itemSize = 44, avatarSize = 92, clas
 
   const handleEnter = (item) => setActiveItem(item);
   const handleLeave = ()     => setActiveItem(null);
-
-  const posMap = {};
-  positions.forEach(p => { posMap[p.id] = p; });
 
   return (
     <div
@@ -263,15 +258,18 @@ function TechRadialIntro({ stageSize = 440, itemSize = 44, avatarSize = 92, clas
       />
 
       {/* Orbiting icons */}
-      {nodesRef.current.map(node => {
-        const pos = posMap[node.id];
-        if (!pos) return null;
+      {nodes.map(node => {
         return (
           <IconNode
             key={node.id}
             item={node.item}
-            x={pos.x}
-            y={pos.y}
+            domRef={el => {
+              if (el) {
+                nodeDomRefs.current[node.id] = el;
+              } else {
+                delete nodeDomRefs.current[node.id];
+              }
+            }}
             size={itemSize}
             isActive={activeItem?.id === node.id}
             onEnter={handleEnter}

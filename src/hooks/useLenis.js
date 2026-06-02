@@ -12,16 +12,20 @@ export function useLenis() {
       smoothWheel: true,
     });
 
+    let rafId;
     function raf(time) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      rafId = requestAnimationFrame(raf);
     }
 
-    requestAnimationFrame(raf);
+    rafId = requestAnimationFrame(raf);
     document.documentElement.classList.add('lenis');
 
     return () => {
       lenis.destroy();
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
       document.documentElement.classList.remove('lenis');
     };
   }, []);

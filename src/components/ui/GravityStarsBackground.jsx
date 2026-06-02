@@ -25,6 +25,7 @@ export function GravityStarsBackground({
   const mouseRef = React.useRef({ x: 0, y: 0 });
   const [dpr, setDpr] = React.useState(1);
   const [canvasSize, setCanvasSize] = React.useState({ width: 800, height: 600 });
+  const [isVisible, setIsVisible] = React.useState(false);
 
   const readColor = React.useCallback(() => {
     const el = containerRef.current;
@@ -162,15 +163,7 @@ export function GravityStarsBackground({
     [dpr, glowIntensity, readColor]
   );
 
-  const animate = React.useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    updateStars();
-    drawStars(ctx);
-    animRef.current = requestAnimationFrame(animate);
-  }, [updateStars, drawStars]);
+
 
   React.useEffect(() => {
     resizeCanvas();
@@ -195,13 +188,48 @@ export function GravityStarsBackground({
   }, [starsCount, starsOpacity, movementSpeed, canvasSize.width, canvasSize.height, initStars]);
 
   React.useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.01 }
+    );
+
+    observer.observe(container);
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (!isVisible) {
+      if (animRef.current) {
+        cancelAnimationFrame(animRef.current);
+        animRef.current = null;
+      }
+      return;
+    }
+
+    const animate = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      updateStars();
+      drawStars(ctx);
+      animRef.current = requestAnimationFrame(animate);
+    };
+
     if (animRef.current) cancelAnimationFrame(animRef.current);
     animRef.current = requestAnimationFrame(animate);
     return () => {
       if (animRef.current) cancelAnimationFrame(animRef.current);
       animRef.current = null;
     };
-  }, [animate]);
+  }, [updateStars, drawStars, isVisible]);
 
   return (
     <div
