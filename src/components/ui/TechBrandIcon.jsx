@@ -1,65 +1,97 @@
+// 1. Import locally available SVG files from src/assets/ as raw strings
+import djangoSvg from '../../assets/django.svg?raw';
+import gitSvg from '../../assets/git.svg?raw';
+import githubSvg from '../../assets/github.svg?raw';
+import html5Svg from '../../assets/html5.svg?raw';
+import javascriptSvg from '../../assets/javascript.svg?raw';
+import postgresqlSvg from '../../assets/postgresql.svg?raw';
+import pythonSvg from '../../assets/python.svg?raw';
+import reactSvg from '../../assets/react.svg?raw';
+import vscodeSvg from '../../assets/vscode.svg?raw';
+// New Local Assets
+import axiosSvg from '../../assets/Axios.svg?raw';
+import reduxSvg from '../../assets/redux.svg?raw';
+import jwtSvg from '../../assets/jwt.svg?raw';
+import npmSvg from '../../assets/NPM.svg?raw';
+
+// 2. Import simple-icons for the remaining fallback technologies
 import {
-  siPython,
-  siJavascript,
-  siReact,
-  siHtml5,
   siCss,
-  siDjango,
-  siNodedotjs,
-  siPostgresql,
-  siMysql,
-  siMongodb,
-  siGit,
-  siGithub,
-  siTailwindcss,
-  siPostman,
-  siVite,
-  siSqlalchemy,
   siFramer,
+  siMongodb,
+  siMysql,
+  siNodedotjs,
+  siPostman,
+  siSqlalchemy,
+  siTailwindcss,
+  siVite,
 } from 'simple-icons';
 
-const icons = {
-  python: siPython,
-  javascript: siJavascript,
-  react: siReact,
-  html5: siHtml5,
-  css: siCss,
-  django: siDjango,
-  nodedotjs: siNodedotjs,
-  postgresql: siPostgresql,
-  mysql: siMysql,
-  mongodb: siMongodb,
-  git: siGit,
-  github: siGithub,
-  tailwindcss: siTailwindcss,
-  postman: siPostman,
-  vite: siVite,
-  sqlalchemy: siSqlalchemy,
-  framer: siFramer,
+// Mapping table for local SVG files
+const localSvgs = {
+  django: djangoSvg,
+  git: gitSvg,
+  github: githubSvg,
+  html5: html5Svg,
+  javascript: javascriptSvg,
+  postgresql: postgresqlSvg,
+  python: pythonSvg,
+  react: reactSvg,
+  vscode: vscodeSvg,
+  axios: axiosSvg,
+  redux: reduxSvg,
+  jwt: jwtSvg,
+  npm: npmSvg,
 };
 
-function VscodeIcon({ className }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden>
-      <path
-        fill="#007ACC"
-        d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.192 8.313L6.78 6.795a1.012 1.012 0 0 0-1.42.015L4.42 7.753a1.012 1.012 0 0 0 .015 1.42l2.585 2.585-2.585 2.585a1.012 1.012 0 0 0-.015 1.42l1.94 1.943a1.012 1.012 0 0 0 1.42-.015l2.533-2.518 8.313 9.192a1.494 1.494 0 0 0 1.705.29l4.94-2.377A1.496 1.496 0 0 0 24 20.06V3.939a1.496 1.496 0 0 0-.85-1.352zm-5.146 14.861L10.826 13l7.178-7.178 2.378 1.142-5.77 11.724z"
-      />
-    </svg>
-  );
-}
+// Brand color values for custom local SVGs to preserve orbit glow/hover effects
+const localBrandHexes = {
+  django: '092E20',
+  git: 'F05032',
+  github: '181717',
+  html5: 'E34F26',
+  javascript: 'F7DF1E',
+  postgresql: '4169E1',
+  python: '3776AB',
+  react: '61DAFB',
+  vscode: '007ACC',
+  axios: '5A29E4',
+  redux: '764ABC',
+  jwt: 'FB015B',
+  npm: 'CB3837',
+};
+
+// Mapping table for simple-icons assets
+const simpleIcons = {
+  css: siCss,
+  framer: siFramer,
+  mongodb: siMongodb,
+  mysql: siMysql,
+  nodedotjs: siNodedotjs,
+  postman: siPostman,
+  sqlalchemy: siSqlalchemy,
+  tailwindcss: siTailwindcss,
+  vite: siVite,
+};
 
 export function getBrandHex(slug) {
-  if (slug === 'vscode') return '007ACC';
-  return icons[slug]?.hex ?? '2563EB';
+  return localBrandHexes[slug] ?? simpleIcons[slug]?.hex ?? '2563EB';
 }
 
 export function TechBrandIcon({ slug, className = 'w-4 h-4' }) {
-  if (slug === 'vscode') {
-    return <VscodeIcon className={className} />;
+  // Strategy A: Safely inject local SVG string if available
+  if (localSvgs[slug]) {
+    return (
+      <span
+        className={`inline-flex items-center justify-center ${className}`}
+        dangerouslySetInnerHTML={{ __html: localSvgs[slug] }}
+        aria-hidden="true"
+      />
+    );
   }
 
-  const icon = icons[slug];
+  // Strategy B: Fall back cleanly to official Simple Icons paths
+  const icon = simpleIcons[slug];
   if (!icon) return null;
 
   return (

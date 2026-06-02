@@ -49,17 +49,18 @@ function CopyButton({ value, label }) {
     <button
       type="button"
       onClick={handleCopy}
-      className="p-1 rounded-md text-[var(--text-subtle)] hover:text-[var(--text)] hover:bg-black/[0.04] dark:hover:bg-white/[0.04] transition-colors focus:outline-none"
+      className="p-1.5 rounded-md text-[var(--text-subtle)] hover:text-[var(--text)] hover:bg-black/[0.04] dark:hover:bg-white/[0.04] transition-colors focus:outline-none"
       aria-label={`Copy ${label}`}
     >
       <AnimatePresence mode="wait">
         {copied ? (
           <motion.span key="ok" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }}>
-            <Check className="w-3 h-3 text-emerald-500" />
+            <Check className="w-3.5 h-3.5 text-emerald-500" />
           </motion.span>
         ) : (
           <motion.span key="copy" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }}>
-            <Copy className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+            {/* FIXED: Removed opacity-0 and group-hover classes so it shows by default on mobile, while still fitting premium styles */}
+            <Copy className="w-3.5 h-3.5 sm:opacity-40 sm:group-hover:opacity-100 transition-opacity" />
           </motion.span>
         )}
       </AnimatePresence>
@@ -89,15 +90,14 @@ export function Contact() {
       setForm({ name: '', email: '', message: '' });
       setTimeout(() => setStatus('idle'), 4000);
     } catch (err) {
-  console.error('EmailJS Error:', err);
-
-  setStatus('error');
-  setErrorMsg(
-    err?.text ||
-    err?.message ||
-    'Something went wrong. Please try again.'
-  );
-}
+      console.error('EmailJS Error:', err);
+      setStatus('error');
+      setErrorMsg(
+        err?.text ||
+        err?.message ||
+        'Something went wrong. Please try again.'
+      );
+    }
   };
 
   return (
@@ -149,7 +149,8 @@ export function Contact() {
               <span className="text-xs font-medium text-[var(--text)]">Call Directly</span>
               <span className="text-[10px] text-[var(--text-subtle)] mt-0.5 font-normal">{siteConfig.phone}</span>
               
-              <div className="absolute top-1 right-1 z-20">
+              {/* FIXED: Elevated explicit z-index container layer to keep it fully operational over links on small touchscreens */}
+              <div className="absolute top-1 right-1 z-30">
                 <CopyButton value={siteConfig.phone} label="phone number" />
               </div>
             </motion.div>
@@ -197,7 +198,8 @@ export function Contact() {
               </div>
               <span className="text-[10px] text-[var(--text-subtle)] mt-0.5 font-normal">Professional Inquiries</span>
               
-              <div className="absolute top-1 right-1 z-20">
+              {/* FIXED: Elevated explicit z-index container layer to keep it fully operational over links on small touchscreens */}
+              <div className="absolute top-1 right-1 z-30">
                 <CopyButton value={siteConfig.email} label="email address" />
               </div>
             </motion.div>

@@ -5,7 +5,7 @@ import { NotFound } from './pages/NotFound';
 import { useTheme } from './hooks/useTheme';
 import { useLenis } from './hooks/useLenis';
 import { siteConfig } from './data/site';
-import BackgroundAnimation from './components/BackgroundAnimation';
+import { PremiumBackground } from './components/layout/PremiumBackground';
 
 function App() {
   const { isDark, toggleTheme } = useTheme();
@@ -18,11 +18,10 @@ function App() {
         <title>{siteConfig.name} | Full-Stack Developer</title>
         <meta name="description" content={siteConfig.headline} />
         <link rel="canonical" href={siteConfig.domain} />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" />
       </Helmet>
 
-      <div className="background-animation">
-        <BackgroundAnimation isDark={isDark} />
-      </div>
+      <PremiumBackground />
 
       <div className="main-content-wrapper">
         <BrowserRouter>

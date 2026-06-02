@@ -11,6 +11,9 @@ import {
   Server,
   Terminal,
   Wrench,
+  ShieldAlert,
+  Cpu,
+  Package,
 } from 'lucide-react';
 import { GitHubIcon } from './BrandIcons';
 
@@ -34,6 +37,10 @@ const map = {
   server: Server,
   database: Database,
   wrench: Wrench,
+  axios: Cpu,
+  redux: Layers,
+  jwt: ShieldAlert,
+  npm: Package,
 };
 
 export function TechIcon({ name, className = 'w-5 h-5' }) {

@@ -31,7 +31,7 @@ export function Hero({ isDark }) {
   return (
     <section
       id="hero"
-      className="relative w-full bg-linear-to-b from-transparent via-[rgba(37,99,235,0.025)] to-transparent"
+      className="relative overflow-hidden"
     >
       {/* Light Rays Background Effect */}
       <div
@@ -73,7 +73,22 @@ export function Hero({ isDark }) {
 
       {/* ── Content Container ── */}
       <div
-        className="relative w-full min-h-[100dvh] flex items-center"
+        className="
+          relative
+          z-10
+          w-full
+          flex
+          items-center
+          justify-center
+          min-h-auto
+          lg:min-h-screen
+          px-6
+          md:px-10
+          lg:px-12
+          pt-24
+          lg:pt-32
+          pb-16
+        "
         style={{
           zIndex: 2,
           paddingTop: isMobile ? '80px' : '110px',
@@ -86,18 +101,20 @@ export function Hero({ isDark }) {
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
-          style={{
-            display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: isMobile ? '40px' : '48px',
-            maxWidth: '1140px',
-            margin: '0 auto',
-            width: '100%',
-          }}
+          className="
+            mx-auto
+            w-full
+            max-w-7xl
+            flex
+            flex-col
+            lg:flex-row
+            items-center
+            justify-center
+            lg:justify-between
+            gap-10
+            lg:gap-16
+          "
         >
-
           {/* ── LEFT AREA: Identity + Premium Status Badge ── */}
           <motion.div
             variants={fadeUp}

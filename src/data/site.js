@@ -44,12 +44,110 @@ export const socialLinks = [
 ];
 
 export const about = {
-  statement:
-    "I am a full-stack developer focused on building practical web applications with modern technologies. My approach centers on learning through building, solving real-world problems, and creating software that delivers meaningful value.",
+  intro: {
+    title: "Hi, I'm Ambady Dileep",
+
+    description1:
+      "I'm a Full Stack Developer focused on building modern web applications using Python, Django, React, JavaScript, and PostgreSQL. I transitioned from a commerce background into software engineering through intensive training and hands-on development.",
+
+    description2:
+      "I enjoy designing scalable backend systems, building clean user experiences, and solving real-world problems through software. My focus is on writing maintainable code, strengthening engineering fundamentals, and continuously improving through project-based learning.",
+  },
+
   philosophy:
-    "Ship iteratively, measure what matters, and treat clean architecture as a product feature—not an afterthought.",
+    "Prioritize fundamentals, build with clarity, and focus on long-term maintainability over short-term complexity.",
+
   vision:
-    "Become an engineer who designs, builds, and scales production systems that teams trust and users love.",
+    "To build reliable software at scale, contribute to meaningful products, and continuously grow as an engineer through learning, execution, and real-world problem solving.",
+
+  timeline: [
+    {
+      date: "March 2022",
+      type: "education",
+      tag: "Foundation",
+      title: "SSLC",
+      institution: "Thiruvampady Higher Secondary School, Alappuzha",
+      achievements: ["97.78%", "9 A+", "1 B+"],
+    },
+
+    {
+      date: "March 2024",
+      type: "education",
+      tag: "Higher Secondary",
+      title: "Commerce with Computer Application",
+      institution: "Thiruvampady Higher Secondary School, Alappuzha",
+      achievements: ["98.15%", "5 A+", "1 A"],
+    },
+
+    {
+      date: "2024 – 2026",
+      type: "training",
+      tag: "Professional Training",
+      title: "Full Stack Development Program",
+      institution: "Brototype",
+
+      technologies: [
+        "Python",
+        "Django",
+        "Django REST Framework",
+        "JavaScript",
+        "React",
+        "PostgreSQL",
+        "Git",
+        "GitHub",
+        "REST APIs",
+        "Full Stack Architecture",
+      ],
+
+      highlight: "2+ years of real-world project experience",
+    },
+
+    {
+      date: "2025 – Present",
+      type: "degree",
+      tag: "Degree",
+      title: "Bachelor of Computer Applications (BCA)",
+      institution: "IGNOU",
+      achievements: ["Currently Pursuing"],
+    },
+
+    {
+      date: "Present",
+      type: "growth",
+      tag: "Current Focus",
+      title: "Continuous Learning & Product Development",
+      institution: null,
+
+      technologies: [
+        "Advanced Django",
+        "React Ecosystem",
+        "System Design",
+        "Database Design",
+        "Backend Architecture",
+        "Clean Code",
+        "Scalable APIs",
+      ],
+    },
+  ],
+
+  stats: [
+    {
+      value: "97.78%",
+      label: "SSLC Score",
+    },
+    {
+      value: "98.15%",
+      label: "Higher Secondary",
+    },
+    {
+      value: "2+",
+      label: "Years Building Projects",
+    },
+    {
+      value: "2025",
+      label: "BCA Started",
+    },
+  ],
 };
 
 export const projects = [
@@ -58,7 +156,24 @@ export const projects = [
     title: "User Management Dashboard",
     description:
       "Secure full-stack platform featuring JWT authentication, role-based access control, profile management, and administrative workflows.",
-    tech: ["React", "Redux Toolkit", "JWT", "REST APIs", "RBAC"],
+    tech: [
+      "React",
+      "Redux Toolkit",
+      "JWT",
+      "REST APIs",
+      "RBAC",
+      "React Router DOM",
+      "Axios",
+      "Tailwind CSS",
+      "Vite",
+      "ESLint",
+      "Prettier",
+      "Python",
+      "Django",
+      "Django REST Framework",
+      "Django ORM",
+      "Dotenv"
+    ],
     live: "https://frontend-mdsa.onrender.com/",
     accent: "#2563EB",
     image: "/projects/user-management.png",

@@ -28,6 +28,8 @@ const RINGS = [
       { id: 'vite',      name: 'Vite',          slug: 'vite'       },
       { id: 'nodedotjs', name: 'Node.js',       slug: 'nodedotjs'  },
       { id: 'framer',    name: 'Framer Motion', slug: 'framer'     },
+      { id: 'redux',     name: 'Redux',         slug: 'redux'      },
+      { id: 'jwt',       name: 'JWT',           slug: 'jwt'        },
     ],
     radiusFraction: 0.385,
     speed: 0.00012,
@@ -42,6 +44,8 @@ const RINGS = [
       { id: 'sqlalchemy', name: 'SQLAlchemy', slug: 'sqlalchemy' },
       { id: 'postman',    name: 'Postman',    slug: 'postman'    },
       { id: 'vscode',     name: 'VS Code',    slug: 'vscode'     },
+      { id: 'axios',      name: 'Axios',      slug: 'axios'      },
+      { id: 'npm',        name: 'NPM',        slug: 'npm'        },
     ],
     radiusFraction: 0.51,
     speed: 0.000085,
@@ -52,7 +56,6 @@ const RINGS = [
 export const orbitTechnologies = RINGS.flatMap(r => r.items);
 
 // ─── Viewport hook ─────────────────────────────────────────────────────────────
-// Now always returns a stageSize — on mobile it's sized to fit the screen width.
 
 function useViewport() {
   const [width, setWidth] = useState(
@@ -64,7 +67,6 @@ function useViewport() {
     return () => window.removeEventListener('resize', fn);
   }, []);
 
-  // Mobile: use 92% of screen width, capped at 340, min 280
   const isMobile = width < 640;
   const stageSize = isMobile
     ? Math.max(280, Math.min(340, Math.floor(width * 0.92)))
@@ -138,11 +140,11 @@ function IconNode({ item, x, y, size, isActive, onEnter, onLeave }) {
       aria-label={item.name}
       onMouseEnter={() => onEnter(item)}
       onMouseLeave={onLeave}
-      onTouchStart={(e) => { e.preventDefault(); onEnter(item); }}
-      onTouchEnd={() => setTimeout(onLeave, 800)}
-      onFocus={() => onEnter(item)}
-      onBlur={onLeave}
-      className="absolute flex items-center justify-center rounded-full focus-visible:outline-none"
+      onTouchStart={(e) => { 
+        e.preventDefault(); 
+        onEnter(item); 
+      }}
+      className="absolute flex items-center justify-center rounded-full focus-visible:outline-none select-none"
       style={{
         width:      size,
         height:     size,
@@ -165,9 +167,10 @@ function IconNode({ item, x, y, size, isActive, onEnter, onLeave }) {
         cursor: 'pointer',
         zIndex: isActive ? 20 : 10,
         touchAction: 'none',
+        WebkitUserSelect: 'none',
       }}
     >
-      <TechBrandIcon slug={item.slug} className="w-[52%] h-[52%]" />
+      <TechBrandIcon slug={item.slug} className="w-[52%] h-[52%] pointer-events-none" />
     </button>
   );
 }
@@ -180,7 +183,6 @@ function TechRadialIntro({ stageSize = 440, itemSize = 44, avatarSize = 92, clas
   const anglesRef  = useRef([]);
   const rafRef     = useRef(null);
   const lastTsRef  = useRef(null);
-  const activeRef  = useRef(null);
   const nodesRef   = useRef([]);
 
   useEffect(() => {
@@ -221,9 +223,7 @@ function TechRadialIntro({ stageSize = 440, itemSize = 44, avatarSize = 92, clas
       lastTsRef.current = ts;
 
       const next = nodesRef.current.map((node, i) => {
-        if (activeRef.current !== node.id) {
-          anglesRef.current[i] += node.speed * node.dir * dt;
-        }
+        anglesRef.current[i] += node.speed * node.dir * dt;
         const a = anglesRef.current[i];
         return { id: node.id, x: cx + node.radius * Math.cos(a), y: cy + node.radius * Math.sin(a) };
       });
@@ -236,8 +236,14 @@ function TechRadialIntro({ stageSize = 440, itemSize = 44, avatarSize = 92, clas
     return () => cancelAnimationFrame(rafRef.current);
   }, [stageSize]);
 
-  const handleEnter = (item) => { activeRef.current = item.id; setActiveItem(item); };
-  const handleLeave = ()     => { activeRef.current = null;    setActiveItem(null); };
+  useEffect(() => {
+    const clearTouch = () => setActiveItem(null);
+    window.addEventListener('touchstart', clearTouch);
+    return () => window.removeEventListener('touchstart', clearTouch);
+  }, []);
+
+  const handleEnter = (item) => setActiveItem(item);
+  const handleLeave = ()     => setActiveItem(null);
 
   const posMap = {};
   positions.forEach(p => { posMap[p.id] = p; });
@@ -246,6 +252,7 @@ function TechRadialIntro({ stageSize = 440, itemSize = 44, avatarSize = 92, clas
     <div
       className={`relative mx-auto select-none ${className}`}
       style={{ width: stageSize, height: stageSize }}
+      onMouseLeave={handleLeave} 
     >
       {/* Ambient fill */}
       <div
@@ -365,7 +372,7 @@ export function TechStack() {
           </p>
         </motion.div>
 
-        {/* Orbit — same on all screen sizes, just scaled */}
+        {/* Orbit */}
         <motion.div
           className="flex justify-center px-2"
           initial={{ opacity: 0, scale: 0.96 }}
