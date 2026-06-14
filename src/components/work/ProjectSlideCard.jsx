@@ -7,7 +7,7 @@ export function ProjectSlideCard({ project, isActive }) {
 
   return (
     <article
-      className={`relative overflow-hidden rounded-2xl border transition-all duration-500 w-full flex flex-col ${
+      className={`relative overflow-hidden rounded-2xl border w-full flex flex-col project-slide-card ${
         isActive
           ? 'border-[var(--border)] shadow-[var(--shadow-card)] bg-[var(--bg-muted)]/40 backdrop-blur-md'
           : 'border-[var(--border)]/60 shadow-[var(--shadow-soft)] bg-transparent'
@@ -19,13 +19,16 @@ export function ProjectSlideCard({ project, isActive }) {
           <img
             src={project.image}
             alt={`${project.title} screenshot`}
-            className="w-full h-auto block transition-transform duration-500 ease-out hover:scale-[1.01]"
+            width="1900"
+            height="963"
+            className="w-full h-auto block project-card-image"
+            style={{ aspectRatio: '1900/963' }}
             onError={() => setImgError(true)}
             loading="lazy"
           />
         ) : (
           <div
-            className="w-full aspect-[16/10] flex flex-col items-center justify-center gap-2 px-6 relative z-10"
+            className="w-full aspect-[1900/963] flex flex-col items-center justify-center gap-2 px-6 relative z-10"
             style={{
               background: `linear-gradient(135deg, ${project.accent}18 0%, var(--bg-muted) 60%)`,
             }}

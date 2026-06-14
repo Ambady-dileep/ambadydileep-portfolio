@@ -71,7 +71,7 @@ function DotButton({ selected, label, onClick }) {
       initial={false}
       aria-label={label}
       aria-current={selected ? 'true' : undefined}
-      className="flex cursor-pointer select-none items-center justify-center rounded-full border-none bg-[#2563EB] text-white text-xs overflow-hidden focus-ring"
+      className="flex cursor-pointer select-none items-center justify-center rounded-full border-none bg-[#2563EB] text-white text-xs overflow-hidden focus-ring carousel-dot-btn"
       animate={{
         width: selected ? 64 : 10,
         height: selected ? 26 : 10,
@@ -152,7 +152,7 @@ export function MotionCarousel({ slides, renderSlide, options, onIndexChange, cl
                     filter: isActive ? 'blur(0px)' : 'blur(1.5px)',
                   }}
                   transition={spring}
-                  className="h-full"
+                  className="h-full carousel-slide-wrapper"
                 >
                   {renderSlide(slide, index, isActive)}
                 </motion.div>

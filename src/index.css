@@ -294,10 +294,10 @@ h1, h2, h3 {
 /* Background Animation Layering */
 .background-animation {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
+  inset: 0;
   height: 100vh;
+  height: 100lvh; /* Static viewport height prevents address bar resize reflows on mobile scroll */
+  width: 100vw;
   z-index: 0;
   pointer-events: none;
 }
@@ -306,4 +306,59 @@ h1, h2, h3 {
   position: relative;
   z-index: 10;
   min-height: 100vh;
+  min-height: 100lvh; /* Static viewport min-height prevents address bar resize reflows on mobile scroll */
+}
+
+/* ── Project Cards & Carousel Mobile Rendering Optimizations ── */
+
+.project-slide-card {
+  /* 1. Eliminate Layout Shifts (CLS) via content containment & visibility */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 420px;
+  
+  /* 2. Force Hardware Acceleration on Mobile (iOS / Android) */
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  
+  /* 3. Limit Transition Properties (Avoid heavy paint triggers like border/shadow) */
+  transition-property: transform, opacity, border-color, background-color, box-shadow;
+  transition-duration: 500ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.project-card-image {
+  /* Hardware accelerate image scaling */
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Restrict hover transitions to pointers that support actual hover interactions */
+@media (hover: hover) {
+  .project-card-image:hover {
+    transform: scale3d(1.01, 1.01, 1);
+  }
+}
+
+.carousel-slide-wrapper {
+  /* Hardware accelerate carousel transitions (especially filter blur) */
+  will-change: transform, opacity, filter;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.carousel-dot-btn {
+  /* Isolate layout shifts caused by animating non-composite properties (width, height) */
+  will-change: width, height, opacity;
+  contain: layout;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
