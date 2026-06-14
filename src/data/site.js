@@ -9,7 +9,7 @@ export const siteConfig = {
   whatsappNumber: "918547502375",
   whatsappUrl: "https://wa.me/918547502375",
   location: "Kerala, India",
-  domain: "https://ambadydileep.live",
+  domain: "https://ambady-dileep.vercel.app",
   resumePath: "/AmbadyDileepResume.pdf",
   heroImagePath: "/portfolio.webp",
   portraitPath: "/portrait.jpg",

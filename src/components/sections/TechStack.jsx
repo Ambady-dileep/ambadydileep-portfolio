@@ -113,7 +113,7 @@ function CenterAvatar({ size = 92 }) {
         {!err ? (
           <img
             src={siteConfig.heroImagePath}
-            alt={siteConfig.name}
+            alt={`${siteConfig.name} — Website Developer Center Avatar`}
             className="w-full h-full object-cover object-center"
             onError={() => setErr(true)}
           />

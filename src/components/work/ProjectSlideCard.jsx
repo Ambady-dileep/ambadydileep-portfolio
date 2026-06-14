@@ -18,7 +18,7 @@ export function ProjectSlideCard({ project, isActive }) {
         {!imgError ? (
           <img
             src={project.image}
-            alt={`${project.title} screenshot`}
+            alt={`${project.title} — Web Development Project by Freelance Web Developer Ambady Dileep`}
             width="1900"
             height="963"
             className="w-full h-auto block project-card-image"

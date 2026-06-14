@@ -20,10 +20,24 @@ function App() {
     <HelmetProvider>
       <Helmet>
         <html lang="en" />
-        <title>{siteConfig.name} | Full-Stack Developer</title>
-        <meta name="description" content={siteConfig.headline} />
+        <title>Ambady Dileep | Freelance Web Developer & Frontend Engineer</title>
+        <meta name="description" content="Ambady Dileep is an expert freelance web developer and frontend developer based in Kerala, India. Hire a professional website developer for your custom apps." />
         <link rel="canonical" href={siteConfig.domain} />
         <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={siteConfig.domain} />
+        <meta property="og:title" content="Ambady Dileep | Freelance Web Developer & Frontend Engineer" />
+        <meta property="og:description" content="Ambady Dileep is an expert freelance web developer and frontend developer based in Kerala, India. Hire a professional website developer for your custom apps." />
+        <meta property="og:image" content={`${siteConfig.domain}/portfolio.webp`} />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content={siteConfig.domain} />
+        <meta name="twitter:title" content="Ambady Dileep | Freelance Web Developer & Frontend Engineer" />
+        <meta name="twitter:description" content="Ambady Dileep is an expert freelance web developer and frontend developer based in Kerala, India. Hire a professional website developer for your custom apps." />
+        <meta name="twitter:image" content={`${siteConfig.domain}/portfolio.webp`} />
       </Helmet>
 
       <PremiumBackground />

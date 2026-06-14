@@ -130,7 +130,7 @@ export function Hero({ isDark }) {
           >
             <SplitText
               text={siteConfig.role}
-              tag="p"
+              tag="h2"
               className="text-[10px] sm:text-[11px] font-medium tracking-[0.2em] uppercase text-[var(--text-subtle)]"
               delay={0.02}
               duration={0.4}
@@ -227,7 +227,7 @@ export function Hero({ isDark }) {
                     {!imgError ? (
                       <img
                         src={siteConfig.heroImagePath}
-                        alt={`${siteConfig.name} — portrait`}
+                        alt={`${siteConfig.name} — Freelance Web Developer and Frontend Engineer Portrait`}
                         className="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-[1.02]"
                         onError={() => setImgError(true)}
                         loading="eager"
